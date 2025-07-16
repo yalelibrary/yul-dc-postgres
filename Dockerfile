@@ -1,4 +1,4 @@
-FROM postgres:13.21
+FROM postgres:12.22
 
 RUN apt-get update && apt install curl -y && apt clean
 COPY docker-entrypoint-initdb.d /docker-entrypoint-initdb.d
