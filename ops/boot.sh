@@ -1,2 +1,2 @@
 #!/bin/bash -ex
-su  postgres -c "/docker-entrypoint.sh postgres -c 'max_connections=500'"
+su  postgres -c "postgres -c 'max_connections=500'"
