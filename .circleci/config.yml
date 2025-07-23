@@ -31,6 +31,7 @@ jobs:
     executor: docker/docker
     steps:
       - setup_remote_docker
+      - checkout # New step added to github-release workflow (to remedy no such file)
       - docker/check
       - docker/pull:
           images: yalelibraryit/dc-postgres:$CIRCLE_SHA1
@@ -46,11 +47,19 @@ jobs:
       - docker/push:
           image: yalelibraryit/dc-postgres
           tag: $CLEAN_BRANCH
+      # Test running script and pulling image
+      - run: |
+          ./bin/wait-for-docker-image yalelibraryit/dc-blacklight $CIRCLE_SHA1
+      - docker/pull:
+          images: yalelibraryit/dc-blacklight:$CIRCLE_SHA1    
   publish-github-release:
     executor: docker/docker
     steps:
       - setup_remote_docker
+      - checkout
       - docker/check
+      - run: |
+          ./bin/wait-for-docker-image yalelibraryit/dc-blacklight $CIRCLE_SHA1
       - docker/pull:
           images: yalelibraryit/dc-postgres:$CIRCLE_SHA1
       - docker-tag:
